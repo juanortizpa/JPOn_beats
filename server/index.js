@@ -1,11 +1,36 @@
-const express = require("express");
-const app = express();
-const PORT = 3000;
+// Importar dependencias
+const express = require('express');
+const dotenv = require('dotenv');
+const path = require('path');
 
-app.get("/", (req, res) => {
-  res.send("Bienvenido a JPON Beats 🎶");
+// Configurar variables de entorno
+dotenv.config();
+
+// Crear la aplicación de Express
+const app = express();
+
+// Configurar el puerto desde .env o usar 3000 por defecto
+const PORT = process.env.PORT || 3000;
+
+// Servir archivos estáticos del frontend
+app.use(express.static(path.join(__dirname, '../app')));
+
+const authRoutes = require('./routes/auth');
+const beatRoutes = require('./routes/beats');
+
+// Middleware para manejar JSON
+app.use(express.json());
+
+// Rutas de la API
+app.use('/api/auth', authRoutes);
+app.use('/api/beats', beatRoutes);
+
+// Ruta básica para verificar que el servidor funciona
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Servidor funcionando correctamente' });
 });
 
+// Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
