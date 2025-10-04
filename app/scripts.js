@@ -18,6 +18,17 @@ document.querySelectorAll('.nav-btn').forEach(button => {
   });
 });
 
+// Alternar entre login y registro
+document.getElementById('switch-to-register').addEventListener('click', () => {
+  document.getElementById('auth-form').style.display = 'none';
+  document.getElementById('register-form').style.display = 'block';
+});
+
+document.getElementById('switch-to-login').addEventListener('click', () => {
+  document.getElementById('register-form').style.display = 'none';
+  document.getElementById('auth-form').style.display = 'block';
+});
+
 // Manejar formulario de login
 document.getElementById('auth-form').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -40,6 +51,33 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
       alert(`Inicio de sesión exitoso. Bienvenido, ${currentUser.username}`);
     } else {
       alert(data.error || 'Error en el inicio de sesión');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Error al conectar con el servidor');
+  }
+});
+
+// Manejar formulario de registro
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = document.getElementById('register-username').value;
+  const password = document.getElementById('register-password').value;
+
+  try {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+
+    if (response.ok) {
+      alert('Registro exitoso. Ahora puedes iniciar sesión.');
+      document.getElementById('register-form').style.display = 'none';
+      document.getElementById('auth-form').style.display = 'block';
+    } else {
+      const data = await response.json();
+      alert(data.error || 'Error en el registro');
     }
   } catch (err) {
     console.error(err);
@@ -101,3 +139,15 @@ async function fetchBeats() {
     alert('Error al obtener los beats');
   }
 }
+
+// Manejar cierre de sesión
+document.getElementById('auth-btn').addEventListener('click', () => {
+  if (token) {
+    token = null;
+    currentUser = null;
+    document.getElementById('auth-btn').textContent = 'Login';
+    alert('Sesión cerrada');
+  } else {
+    document.getElementById('auth-module').style.display = 'block';
+  }
+});

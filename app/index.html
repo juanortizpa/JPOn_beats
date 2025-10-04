@@ -44,13 +44,27 @@
     </section>
 
     <section id="auth-module" class="module" style="display: none;">
-      <form id="auth-form">
-        <h2 id="auth-title">Login</h2>
-        <input type="text" id="username" placeholder="Usuario" required>
-        <input type="password" id="password" placeholder="Contraseña" required>
-        <button type="submit">Enviar</button>
-      </form>
-    </section>
+  <div id="auth-container">
+    <form id="auth-form">
+      <h2 id="auth-title">Login</h2>
+      <input type="text" id="username" placeholder="Usuario" required>
+      <input type="password" id="password" placeholder="Contraseña" required>
+      <button type="submit">Enviar</button>
+    </form>
+    <p id="toggle-auth">
+      ¿No tienes cuenta? <button id="switch-to-register">Regístrate</button>
+    </p>
+  </div>
+  <form id="register-form" style="display: none;">
+    <h2>Registro</h2>
+    <input type="text" id="register-username" placeholder="Usuario" required>
+    <input type="password" id="register-password" placeholder="Contraseña" required>
+    <button type="submit">Registrar</button>
+    <p id="toggle-register">
+      ¿Ya tienes cuenta? <button id="switch-to-login">Inicia sesión</button>
+    </p>
+  </form>
+</section>
   </main>
 
   <script src="scripts.js"></script>
