@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://jpon-beats-backend.onrender.com/api';
 let token = null;
 
 // Mostrar formulario de login o registro
