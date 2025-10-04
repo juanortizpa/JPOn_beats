@@ -19,6 +19,12 @@ document.querySelectorAll('.nav-btn').forEach(button => {
 // Manejar formulario de subida de beats
 document.getElementById('upload-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+
+  if (!token) {
+    alert('Debes iniciar sesión para subir beats.');
+    return;
+  }
+
   const title = document.getElementById('beat-title').value;
   const file = document.getElementById('beat-file').files[0];
 
@@ -29,7 +35,7 @@ document.getElementById('upload-form').addEventListener('submit', async (e) => {
   try {
     const response = await fetch(`${API_URL}/beats`, {
       method: 'POST',
-      headers: { 'Authorization': token },
+      headers: { 'Authorization': `Bearer ${token}` },
       body: formData
     });
 
