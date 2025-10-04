@@ -10,33 +10,45 @@
   <header>
     <h1>JPON_BEATS</h1>
     <nav>
-      <button id="login-btn">Login</button>
-      <button id="register-btn">Register</button>
-      <button id="logout-btn" style="display: none;">Logout</button>
+      <button class="nav-btn" data-module="home">Inicio</button>
+      <button class="nav-btn" data-module="beats">Beats Libres</button>
+      <button class="nav-btn" data-module="upload">Subir Beat</button>
+      <button class="nav-btn" data-module="contact">Contacto</button>
+      <button id="auth-btn" class="nav-btn" data-module="auth">Login</button>
     </nav>
   </header>
 
   <main>
-    <section id="auth-section">
-      <form id="auth-form" style="display: none;">
-        <h2 id="auth-title">Login</h2>
-        <input type="text" id="username" placeholder="Username" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="submit">Submit</button>
-      </form>
+    <section id="home-module" class="module">
+      <h2>Bienvenido a JPON_BEATS</h2>
+      <p>Explora beats libres y sube tus propios beats.</p>
     </section>
 
-    <section id="beats-section">
-      <h2>Beats</h2>
+    <section id="beats-module" class="module" style="display: none;">
+      <h2>Beats Libres</h2>
       <ul id="beats-list"></ul>
     </section>
 
-    <section id="upload-section" style="display: none;">
-      <h2>Upload Beat</h2>
+    <section id="upload-module" class="module" style="display: none;">
+      <h2>Subir Beat</h2>
       <form id="upload-form">
-        <input type="text" id="beat-title" placeholder="Title" required>
-        <input type="text" id="beat-file" placeholder="File Path" required>
-        <button type="submit">Upload</button>
+        <input type="text" id="beat-title" placeholder="Título" required>
+        <input type="file" id="beat-file" accept=".wav" required>
+        <button type="submit">Subir</button>
+      </form>
+    </section>
+
+    <section id="contact-module" class="module" style="display: none;">
+      <h2>Contacto</h2>
+      <p>Para consultas, contáctanos en: contacto@jponbeats.com</p>
+    </section>
+
+    <section id="auth-module" class="module" style="display: none;">
+      <form id="auth-form">
+        <h2 id="auth-title">Login</h2>
+        <input type="text" id="username" placeholder="Usuario" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <button type="submit">Enviar</button>
       </form>
     </section>
   </main>

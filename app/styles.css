@@ -12,8 +12,13 @@ header {
   text-align: center;
 }
 
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
 nav button {
-  margin: 0 5px;
   padding: 10px 15px;
   background-color: #555;
   color: white;
@@ -29,25 +34,16 @@ main {
   padding: 1rem;
 }
 
-form {
-  margin: 1rem 0;
+.module {
+  display: none;
 }
 
-form input {
-  display: block;
+.module h2 {
+  color: #333;
+}
+
+form input, form button {
   margin: 10px 0;
   padding: 10px;
   width: 100%;
-}
-
-form button {
-  padding: 10px 15px;
-  background-color: #333;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-form button:hover {
-  background-color: #555;
 }
