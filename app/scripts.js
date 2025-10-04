@@ -1,9 +1,6 @@
 const API_URL = 'https://jpon-beats.onrender.com/api';
 let token = null;
 
-const cors = require('cors');
-// Configurar CORS para permitir solicitudes desde cualquier origen
-app.use(cors());
 
 // Mostrar formulario de login o registro
 document.getElementById('login-btn').addEventListener('click', () => showAuthForm('login'));

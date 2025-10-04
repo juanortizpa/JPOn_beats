@@ -12,6 +12,10 @@ const app = express();
 // Configurar el puerto desde .env o usar 3000 por defecto
 const PORT = process.env.PORT || 3000;
 
+const cors = require('cors');
+// Configurar CORS para permitir solicitudes desde cualquier origen
+app.use(cors());
+
 // Servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, '../app')));
 
