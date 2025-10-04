@@ -1,5 +1,6 @@
 const API_URL = 'https://jpon-beats.onrender.com/api';
 let token = null;
+let currentUser = null; // Almacenar información del usuario actual
 
 // Manejar navegación entre módulos
 document.querySelectorAll('.nav-btn').forEach(button => {
@@ -10,10 +11,40 @@ document.querySelectorAll('.nav-btn').forEach(button => {
     });
 
     if (module === 'auth' && token) {
-      button.textContent = 'Cuenta';
+      button.textContent = 'Mi Cuenta';
       document.getElementById('auth-module').style.display = 'none';
+      alert(`Bienvenido, ${currentUser.username}`);
     }
   });
+});
+
+// Manejar formulario de login
+document.getElementById('auth-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await response.json();
+
+    if (response.ok) {
+      token = data.token;
+      currentUser = data.user; // Almacenar información del usuario
+      document.getElementById('auth-btn').textContent = 'Mi Cuenta';
+      document.getElementById('auth-module').style.display = 'none';
+      alert(`Inicio de sesión exitoso. Bienvenido, ${currentUser.username}`);
+    } else {
+      alert(data.error || 'Error en el inicio de sesión');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Error al conectar con el servidor');
+  }
 });
 
 // Manejar formulario de subida de beats
