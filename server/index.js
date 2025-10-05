@@ -34,6 +34,23 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Servidor funcionando correctamente' });
 });
 
+// Ruta para verificar conexión a la base de datos
+app.get('/api/db-check', async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('users').select('*').limit(1);
+
+    if (error) {
+      console.error('Error al conectar con la base de datos:', error.message);
+      return res.status(500).json({ status: 'error', message: 'No se pudo conectar con la base de datos', error: error.message });
+    }
+
+    res.status(200).json({ status: 'ok', message: 'Conexión exitosa a la base de datos', data });
+  } catch (err) {
+    console.error('Error inesperado:', err);
+    res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+  }
+});
+
 // Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
