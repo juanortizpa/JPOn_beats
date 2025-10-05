@@ -17,7 +17,17 @@ const storage = multer.diskStorage({
     cb(null, `${uniqueSuffix}-${file.originalname}`);
   }
 });
-const upload = multer({ storage });
+
+// Agregar filtro para validar el tipo de archivo
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ['audio/wav'];
+  if (!allowedTypes.includes(file.mimetype)) {
+    return cb(new Error('Tipo de archivo no permitido. Solo se aceptan archivos .wav'));
+  }
+  cb(null, true);
+};
+
+const upload = multer({ storage, fileFilter });
 
 // Middleware para verificar el token JWT
 const authenticateToken = (req, res, next) => {
@@ -39,13 +49,16 @@ router.post('/', authenticateToken, upload.single('file'), (req, res) => {
   const authorId = req.user.id;
 
   if (!title || !req.file) {
+    console.error('Error: Faltan datos requeridos o archivo no subido');
     return res.status(400).json({ error: 'Faltan datos requeridos' });
   }
 
+  console.log('Archivo recibido:', req.file);
   const filePath = req.file.path;
 
   Beat.createBeat(title, filePath, authorId, (err) => {
     if (err) {
+      console.error('Error al guardar el beat en la base de datos:', err);
       return res.status(500).json({ error: 'Error al subir el beat' });
     }
     res.status(201).json({ message: 'Beat subido exitosamente' });
