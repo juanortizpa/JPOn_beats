@@ -2,6 +2,7 @@ const db = require('./db');
 
 // Agregar logs para depuración
 console.log('Verificando existencia de la tabla de usuarios...');
+
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
@@ -22,10 +23,21 @@ db.serialize(() => {
 module.exports = {
   createUser: (username, password, callback) => {
     const query = `INSERT INTO users (username, password) VALUES (?, ?)`;
-    db.run(query, [username, password], callback);
+    db.run(query, [username, password], function (err) {
+      if (err) {
+        console.error('Error al crear usuario:', err.message);
+      }
+      callback(err, this ? this.lastID : null);
+    });
   },
+
   findUserByUsername: (username, callback) => {
     const query = `SELECT * FROM users WHERE username = ?`;
-    db.get(query, [username], callback);
+    db.get(query, [username], (err, row) => {
+      if (err) {
+        console.error('Error al buscar usuario:', err.message);
+      }
+      callback(err, row);
+    });
   }
 };

@@ -20,15 +20,18 @@ router.post('/register', async (req, res) => {
     });
 
     if (error) {
-      console.error('Error en Supabase al registrar usuario:', error);
+      console.error('Error en Supabase al registrar usuario:', error.message);
       return res.status(500).json({ error: error.message });
     }
 
     console.log('Usuario registrado exitosamente:', data);
-    res.status(201).json({ message: 'Usuario registrado exitosamente', user: data.user });
+    return res.status(201).json({
+      message: 'Usuario registrado exitosamente',
+      user: data.user
+    });
   } catch (err) {
-    console.error('Error inesperado:', err);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error('Error inesperado en /register:', err.message);
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
@@ -49,15 +52,19 @@ router.post('/login', async (req, res) => {
     });
 
     if (error) {
-      console.error('Error en Supabase al iniciar sesión:', error);
+      console.error('Error en Supabase al iniciar sesión:', error.message);
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
     console.log('Inicio de sesión exitoso:', data);
-    res.status(200).json({ message: 'Inicio de sesión exitoso', session: data.session });
+    return res.status(200).json({
+      message: 'Inicio de sesión exitoso',
+      session: data.session,
+      user: data.user
+    });
   } catch (err) {
-    console.error('Error inesperado:', err);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error('Error inesperado en /login:', err.message);
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
