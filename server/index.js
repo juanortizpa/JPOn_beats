@@ -22,6 +22,9 @@ app.use(express.static(path.join(__dirname, '../app')));
 const authRoutes = require('./routes/auth');
 const beatRoutes = require('./routes/beats');
 
+// Importar Supabase
+const { supabase } = require('./supabase');
+
 // Middleware para manejar JSON
 app.use(express.json());
 
