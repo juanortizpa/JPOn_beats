@@ -97,6 +97,11 @@ document.getElementById('upload-form').addEventListener('submit', async (e) => {
   const title = document.getElementById('beat-title').value;
   const file = document.getElementById('beat-file').files[0];
 
+  if (!file) {
+    alert('Por favor selecciona un archivo para subir.');
+    return;
+  }
+
   const formData = new FormData();
   formData.append('title', title);
   formData.append('file', file);
