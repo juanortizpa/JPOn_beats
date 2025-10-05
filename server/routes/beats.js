@@ -18,11 +18,11 @@ const storage = multer.diskStorage({
   }
 });
 
-// Agregar filtro para validar el tipo de archivo
+// Actualizar filtro para permitir archivos .wav y .mp3
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = ['audio/wav'];
+  const allowedTypes = ['audio/wav', 'audio/mpeg'];
   if (!allowedTypes.includes(file.mimetype)) {
-    return cb(new Error('Tipo de archivo no permitido. Solo se aceptan archivos .wav'));
+    return cb(new Error('Tipo de archivo no permitido. Solo se aceptan archivos .wav y .mp3'));
   }
   cb(null, true);
 };
