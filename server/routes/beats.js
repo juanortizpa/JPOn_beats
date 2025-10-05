@@ -28,38 +28,32 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Ruta para subir un beat
-router.post('/', authenticateToken, upload, async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   const { title } = req.body;
   const file = req.file;
 
   if (!title || !file) {
+    console.error('Error: Faltan datos requeridos');
     return res.status(400).json({ error: 'Faltan datos requeridos' });
   }
 
-  // Subir archivo a Supabase Storage
-  const { data, error: uploadError } = await supabase.storage
-    .from('beats')
-    .upload(`public/${file.originalname}`, file.buffer, {
-      contentType: file.mimetype,
-      upsert: true
-    });
+  const { data, error } = await supabase.storage.from('beats').upload(file.originalname, file.buffer);
 
-  if (uploadError) {
-    return res.status(500).json({ error: 'Error al subir el archivo a Supabase' });
+  if (error) {
+    console.error('Error al subir el archivo:', error.message);
+    return res.status(500).json({ error: 'Error al subir el archivo' });
   }
 
-  const fileUrl = data.Key;
+  const fileUrl = data.path;
 
-  // Guardar información del beat en la base de datos
-  const { error: insertError } = await supabase
-    .from('beats')
-    .insert({
-      title,
-      file_url: fileUrl,
-      user_id: req.user.id
-    });
+  const { error: insertError } = await supabase.from('beats').insert({
+    title,
+    file_url: fileUrl,
+    user_id: req.user.id
+  });
 
   if (insertError) {
+    console.error('Error al guardar el beat en la base de datos:', insertError.message);
     return res.status(500).json({ error: 'Error al guardar el beat en la base de datos' });
   }
 
@@ -71,6 +65,7 @@ router.get('/', async (req, res) => {
   const { data, error } = await supabase.from('beats').select('*');
 
   if (error) {
+    console.error('Error al obtener los beats:', error.message);
     return res.status(500).json({ error: 'Error al obtener los beats' });
   }
 

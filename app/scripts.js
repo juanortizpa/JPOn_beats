@@ -157,7 +157,7 @@ document.getElementById('auth-btn').addEventListener('click', () => {
   }
 });
 
-// Actualizar lógica de frontend para interactuar con Supabase
+// Ajustar lógica de frontend para interactuar con las columnas correctas
 async function registerUser(email, password) {
   try {
     const response = await fetch(`${API_URL}/auth/register`, {
@@ -173,7 +173,7 @@ async function registerUser(email, password) {
       alert(data.error);
     }
   } catch (err) {
-    console.error(err);
+    console.error('Error al registrar usuario:', err);
     alert('Error al conectar con el servidor');
   }
 }
@@ -194,7 +194,7 @@ async function loginUser(email, password) {
       alert(data.error);
     }
   } catch (err) {
-    console.error(err);
+    console.error('Error al iniciar sesión:', err);
     alert('Error al conectar con el servidor');
   }
 }
@@ -218,7 +218,7 @@ async function uploadBeat(title, file) {
       alert(data.error);
     }
   } catch (err) {
-    console.error(err);
+    console.error('Error al subir el beat:', err);
     alert('Error al conectar con el servidor');
   }
 }
