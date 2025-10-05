@@ -19,58 +19,52 @@
   </header>
 
   <main>
-    <!-- HOME -->
     <section id="home-module" class="module">
       <h2>Bienvenido a JPON_BEATS</h2>
       <p>Explora beats libres y sube tus propios beats.</p>
     </section>
 
-    <!-- LISTA DE BEATS -->
     <section id="beats-module" class="module" style="display: none;">
       <h2>Beats Libres</h2>
       <ul id="beats-list"></ul>
     </section>
 
-    <!-- SUBIR BEAT -->
     <section id="upload-module" class="module" style="display: none;">
       <h2>Subir Beat</h2>
-      <form id="upload-form" enctype="multipart/form-data">
+      <form id="upload-form">
         <input type="text" id="beat-title" placeholder="Título" required>
-        <input type="file" id="beat-file" accept=".wav,.mp3,.ogg" required>
+        <input type="file" id="beat-file" accept=".wav" required>
         <button type="submit">Subir</button>
       </form>
     </section>
 
-    <!-- CONTACTO -->
     <section id="contact-module" class="module" style="display: none;">
       <h2>Contacto</h2>
       <p>Para consultas, contáctanos en: contacto@jponbeats.com</p>
     </section>
 
-    <!-- LOGIN / REGISTER -->
     <section id="auth-module" class="module" style="display: none;">
-      <div id="auth-container">
-        <form id="auth-form">
-          <h2 id="auth-title">Login</h2>
-          <input type="email" id="email" placeholder="Correo electrónico" required>
-          <input type="password" id="password" placeholder="Contraseña" required>
-          <button type="submit">Ingresar</button>
-        </form>
-        <p id="toggle-auth">
-          ¿No tienes cuenta? <button id="switch-to-register" type="button">Regístrate</button>
-        </p>
-      </div>
-
-      <form id="register-form" style="display: none;">
-        <h2>Registro</h2>
-        <input type="email" id="register-email" placeholder="Correo electrónico" required>
-        <input type="password" id="register-password" placeholder="Contraseña" required>
-        <button type="submit">Registrar</button>
-        <p id="toggle-register">
-          ¿Ya tienes cuenta? <button id="switch-to-login" type="button">Inicia sesión</button>
-        </p>
-      </form>
-    </section>
+  <div id="auth-container">
+    <form id="auth-form">
+      <h2 id="auth-title">Login</h2>
+      <input type="text" id="username" placeholder="Usuario" required>
+      <input type="password" id="password" placeholder="Contraseña" required>
+      <button type="submit">Enviar</button>
+    </form>
+    <p id="toggle-auth">
+      ¿No tienes cuenta? <button id="switch-to-register">Regístrate</button>
+    </p>
+  </div>
+  <form id="register-form" style="display: none;">
+    <h2>Registro</h2>
+    <input type="text" id="register-username" placeholder="Usuario" required>
+    <input type="password" id="register-password" placeholder="Contraseña" required>
+    <button type="submit">Registrar</button>
+    <p id="toggle-register">
+      ¿Ya tienes cuenta? <button id="switch-to-login">Inicia sesión</button>
+    </p>
+  </form>
+</section>
   </main>
 
   <script src="scripts.js"></script>
