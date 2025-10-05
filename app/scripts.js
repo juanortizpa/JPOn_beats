@@ -156,3 +156,69 @@ document.getElementById('auth-btn').addEventListener('click', () => {
     document.getElementById('auth-module').style.display = 'block';
   }
 });
+
+// Actualizar lógica de frontend para interactuar con Supabase
+async function registerUser(email, password) {
+  try {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert('Registro exitoso');
+    } else {
+      alert(data.error);
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Error al conectar con el servidor');
+  }
+}
+
+async function loginUser(email, password) {
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      token = data.session.access_token;
+      alert('Inicio de sesión exitoso');
+    } else {
+      alert(data.error);
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Error al conectar con el servidor');
+  }
+}
+
+async function uploadBeat(title, file) {
+  try {
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('file', file);
+
+    const response = await fetch(`${API_URL}/beats`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert('Beat subido exitosamente');
+    } else {
+      alert(data.error);
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Error al conectar con el servidor');
+  }
+}
