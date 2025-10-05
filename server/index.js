@@ -37,17 +37,19 @@ app.get('/api/health', (req, res) => {
 // Ruta para verificar conexión a la base de datos
 app.get('/api/db-check', async (req, res) => {
   try {
+    console.log('Iniciando verificación de conexión a la base de datos...');
     const { data, error } = await supabase.from('users').select('*').limit(1);
 
     if (error) {
-      console.error('Error al conectar con la base de datos:', error.message);
+      console.error('Error al conectar con la base de datos:', error);
       return res.status(500).json({ status: 'error', message: 'No se pudo conectar con la base de datos', error: error.message });
     }
 
+    console.log('Conexión exitosa. Datos obtenidos:', data);
     res.status(200).json({ status: 'ok', message: 'Conexión exitosa a la base de datos', data });
   } catch (err) {
-    console.error('Error inesperado:', err);
-    res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+    console.error('Error inesperado durante la verificación:', err);
+    res.status(500).json({ status: 'error', message: 'Error interno del servidor', error: err.message });
   }
 });
 
