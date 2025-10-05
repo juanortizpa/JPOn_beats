@@ -104,7 +104,7 @@ document.getElementById('upload-form').addEventListener('submit', async (e) => {
   try {
     const response = await fetch(`${API_URL}/beats`, {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
+      headers: { 'Authorization': `Bearer ${token}` }, // Agregar prefijo "Bearer"
       body: formData
     });
 

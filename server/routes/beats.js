@@ -7,7 +7,9 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // Middleware para verificar el token JWT
 const authenticateToken = (req, res, next) => {
-  const token = req.headers['authorization'];
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Extraer el token después de "Bearer"
+
   if (!token) return res.status(401).json({ error: 'Token requerido' });
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
