@@ -1,4 +1,4 @@
-const API_URL = 'https://jpon-beats.onrender.com/api';
+const API_URL = 'https://xyetgykagqvezuhconys.supabase.co';
 let token = null;
 let currentUser = null; // Almacenar información del usuario actual
 
@@ -32,19 +32,19 @@ document.getElementById('switch-to-login').addEventListener('click', () => {
 // Manejar formulario de login
 document.getElementById('auth-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const username = document.getElementById('username').value;
+  const email = document.getElementById('username').value;
   const password = document.getElementById('password').value;
 
   try {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ email, password })
     });
     const data = await response.json();
 
     if (response.ok) {
-      token = data.token;
+      token = data.session.access_token;
       currentUser = data.user; // Almacenar información del usuario
       document.getElementById('auth-btn').textContent = 'Mi Cuenta';
       document.getElementById('auth-module').style.display = 'none';
@@ -61,14 +61,14 @@ document.getElementById('auth-form').addEventListener('submit', async (e) => {
 // Manejar formulario de registro
 document.getElementById('register-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const username = document.getElementById('register-username').value;
+  const email = document.getElementById('register-username').value;
   const password = document.getElementById('register-password').value;
 
   try {
     const response = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ email, password })
     });
 
     if (response.ok) {

@@ -1,33 +1,17 @@
 const express = require('express');
-const Beat = require('../models/Beat');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
+const { supabase } = require('../supabase');
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // Configurar multer para manejar la subida de archivos
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../../uploads')); // Carpeta donde se guardarán los archivos
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}-${file.originalname}`);
-  }
-});
+const storage = multer.memoryStorage(); // Cambiar a memoria para subir a Supabase
 
-// Actualizar filtro para permitir archivos .wav y .mp3
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = ['audio/wav', 'audio/mpeg'];
-  if (!allowedTypes.includes(file.mimetype)) {
-    return cb(new Error('Tipo de archivo no permitido. Solo se aceptan archivos .wav y .mp3'));
-  }
-  cb(null, true);
-};
-
-const upload = multer({ storage, fileFilter });
+// Middleware para manejar errores de multer
+const upload = multer({ storage }).single('file');
 
 // Middleware para verificar el token JWT
 const authenticateToken = (req, res, next) => {
@@ -44,35 +28,53 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Ruta para subir un beat
-router.post('/', authenticateToken, upload.single('file'), (req, res) => {
+router.post('/', authenticateToken, upload, async (req, res) => {
   const { title } = req.body;
-  const authorId = req.user.id;
+  const file = req.file;
 
-  if (!title || !req.file) {
-    console.error('Error: Faltan datos requeridos o archivo no subido');
+  if (!title || !file) {
     return res.status(400).json({ error: 'Faltan datos requeridos' });
   }
 
-  console.log('Archivo recibido:', req.file);
-  const filePath = req.file.path;
+  // Subir archivo a Supabase Storage
+  const { data, error: uploadError } = await supabase.storage
+    .from('beats')
+    .upload(`public/${file.originalname}`, file.buffer, {
+      contentType: file.mimetype,
+      upsert: true
+    });
 
-  Beat.createBeat(title, filePath, authorId, (err) => {
-    if (err) {
-      console.error('Error al guardar el beat en la base de datos:', err);
-      return res.status(500).json({ error: 'Error al subir el beat' });
-    }
-    res.status(201).json({ message: 'Beat subido exitosamente' });
-  });
+  if (uploadError) {
+    return res.status(500).json({ error: 'Error al subir el archivo a Supabase' });
+  }
+
+  const fileUrl = data.Key;
+
+  // Guardar información del beat en la base de datos
+  const { error: insertError } = await supabase
+    .from('beats')
+    .insert({
+      title,
+      file_url: fileUrl,
+      user_id: req.user.id
+    });
+
+  if (insertError) {
+    return res.status(500).json({ error: 'Error al guardar el beat en la base de datos' });
+  }
+
+  res.status(201).json({ message: 'Beat subido exitosamente' });
 });
 
 // Ruta para listar todos los beats
-router.get('/', (req, res) => {
-  Beat.getAllBeats((err, beats) => {
-    if (err) {
-      return res.status(500).json({ error: 'Error al obtener los beats' });
-    }
-    res.json(beats);
-  });
+router.get('/', async (req, res) => {
+  const { data, error } = await supabase.from('beats').select('*');
+
+  if (error) {
+    return res.status(500).json({ error: 'Error al obtener los beats' });
+  }
+
+  res.status(200).json(data);
 });
 
 module.exports = router;

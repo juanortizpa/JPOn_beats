@@ -1,6 +1,7 @@
 const db = require('./db');
 
-// Crear tabla de usuarios si no existe
+// Agregar logs para depuración
+console.log('Verificando existencia de la tabla de usuarios...');
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
@@ -11,9 +12,9 @@ db.serialize(() => {
     )
   `, (err) => {
     if (err) {
-      console.error('Error al crear la tabla de usuarios:', err.message);
+      console.error('Error al crear/verificar la tabla de usuarios:', err.message);
     } else {
-      console.log('Tabla de usuarios lista.');
+      console.log('Tabla de usuarios lista o ya existente.');
     }
   });
 });
