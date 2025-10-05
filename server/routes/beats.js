@@ -1,9 +1,23 @@
 const express = require('express');
 const Beat = require('../models/Beat');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const path = require('path');
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
+
+// Configurar multer para manejar la subida de archivos
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '../../uploads')); // Carpeta donde se guardarán los archivos
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, `${uniqueSuffix}-${file.originalname}`);
+  }
+});
+const upload = multer({ storage });
 
 // Middleware para verificar el token JWT
 const authenticateToken = (req, res, next) => {
@@ -20,13 +34,15 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Ruta para subir un beat
-router.post('/', authenticateToken, (req, res) => {
-  const { title, filePath } = req.body;
+router.post('/', authenticateToken, upload.single('file'), (req, res) => {
+  const { title } = req.body;
   const authorId = req.user.id;
 
-  if (!title || !filePath) {
+  if (!title || !req.file) {
     return res.status(400).json({ error: 'Faltan datos requeridos' });
   }
+
+  const filePath = req.file.path;
 
   Beat.createBeat(title, filePath, authorId, (err) => {
     if (err) {
